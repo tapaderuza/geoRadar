@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Usa el comando gradle para construir tu proyecto
-                    sh './gradlew clean build'
+                    bat './gradlew clean build'
                 }
             }
         }
