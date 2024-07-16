@@ -37,6 +37,10 @@ public class GeoRadar {
     @ElementCollection
     private List<String> alertas;
 
+    public GeoRadar() {
+
+    }
+
 
     //Getter y Setter
 
@@ -167,4 +171,43 @@ public class GeoRadar {
     public void setAlertas(List<String> alertas) {
         this.alertas = alertas;
     }
+
+    @Override
+    public String toString() {
+        return "geoRadar{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", latitud=" + latitud +
+                ", longitud=" + longitud +
+                ", altitud=" + altitud +
+                ", direccion='" + direccion + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", fabricante='" + fabricante + '\'' +
+                ", fechaIns=" + fechaIns +
+                ", estado='" + estado + '\'' +
+                ", frecuencia='" + frecuencia + '\'' +
+                ", distanciaMax=" + distanciaMax +
+                ", sensibilidad=" + sensibilidad +
+                ", ultimaLectura='" + ultimaLectura + '\'' +
+                ", historial=" + historial +
+                ", alertas=" + alertas +
+                '}';
+    }
+
+    public GeoRadar(String nombre, int latitud, int longitud, int altitud, String direccion, String modelo, String fabricante, LocalDate fechaIns, String estado, String frecuencia, int distanciaMax, int sensibilidad, String ultimaLectura) {
+        this.nombre = nombre;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.altitud = altitud;
+        this.direccion = direccion;
+        this.modelo = modelo;
+        this.fabricante = fabricante;
+        this.fechaIns = fechaIns;
+        this.estado = estado;
+        this.frecuencia = frecuencia;
+        this.distanciaMax = distanciaMax;
+        this.sensibilidad = sensibilidad;
+        this.ultimaLectura = ultimaLectura;
+    }
+
 }

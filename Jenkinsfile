@@ -9,24 +9,13 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'gradle clean build'
+                script {
+                    def gradleHome = tool name: 'Gradle 7', type: 'Gradle'
+                    sh "${gradleHome}/bin/gradle clean build"
+                }
             }
-        }
-        stage('Test') {
-            steps {
-                sh 'gradle test'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                // Agregar los pasos de despliegue aquí
-            }
-        }
-    }
-
-    post {
-        always {
-            junit 'build/test-results/test/*.xml'
         }
     }
 }
+
+
