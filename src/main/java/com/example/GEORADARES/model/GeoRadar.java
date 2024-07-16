@@ -1,12 +1,11 @@
 package com.example.GEORADARES.model;
 
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-public class geoRadar {
+public class GeoRadar {
 
     // Identificacion
     @Id

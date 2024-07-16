@@ -1,6 +1,6 @@
 package com.example.GEORADARES.service;
 
-import com.example.GEORADARES.model.geoRadar;
+import com.example.GEORADARES.model.GeoRadar;
 import com.example.GEORADARES.repository.geoRadarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +16,15 @@ public class geoRadarService {
 
 
 
-    public List<geoRadar> findAll(){
+    public List<GeoRadar> findAll(){
         return geoRadarRepository.findAll();
     }
 
-    public Optional<geoRadar> findById(Long id){
+    public Optional<GeoRadar> findById(Long id){
         return geoRadarRepository.findById(id);
     }
 
-    public geoRadar save (geoRadar geoRadar){
+    public GeoRadar save (GeoRadar geoRadar){
         return geoRadarRepository.save(geoRadar);
     }
 

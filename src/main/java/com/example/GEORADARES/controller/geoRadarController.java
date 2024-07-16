@@ -1,6 +1,6 @@
 package com.example.GEORADARES.controller;
 
-import com.example.GEORADARES.model.geoRadar;
+import com.example.GEORADARES.model.GeoRadar;
 import com.example.GEORADARES.service.geoRadarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +16,22 @@ public class geoRadarController {
     private geoRadarService geoRadarService;
 
     @GetMapping
-    public List<geoRadar> getAllGeoRadars(){
+    public List<GeoRadar> getAllGeoRadars(){
         return geoRadarService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<geoRadar> getRadarById(@PathVariable Long id){
+    public Optional<GeoRadar> getRadarById(@PathVariable Long id){
         return geoRadarService.findById(id);
     }
 
     @PostMapping
-    public geoRadar createGeoRadar (@RequestBody geoRadar geoRadar){
+    public GeoRadar createGeoRadar (@RequestBody GeoRadar geoRadar){
         return geoRadarService.save(geoRadar);
     }
 
     @PutMapping("/{id}")
-    public geoRadar updateGeoRadar (@PathVariable Long id, @RequestBody geoRadar geoRadar){
+    public GeoRadar updateGeoRadar (@PathVariable Long id, @RequestBody GeoRadar geoRadar){
         geoRadar.setId(id);
         return geoRadarService.save(geoRadar);
     }
