@@ -11,7 +11,7 @@ public class geoRadar {
     // Identificacion
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     private String nombre;
 
     // Ubicacion
@@ -41,11 +41,11 @@ public class geoRadar {
 
     //Getter y Setter
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
