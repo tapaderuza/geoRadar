@@ -3,12 +3,6 @@ package com.example.GEORADARES.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -22,58 +16,29 @@ import java.util.List;
 import java.time.LocalDate;
 
 public class GeoRadarGUI extends JFrame {
-
     private JTable table;
     private GeoRadarTableModel tableModel;
     private Timer timer;
-    private DefaultCategoryDataset dataset;
+    private String username;
+    private String password;
 
-    public GeoRadarGUI() {
+    public GeoRadarGUI(String username, String password) throws Exception {
+        this.username = username;
+        this.password = password;
+
         setTitle("GeoRadars Monitoring");
-        setSize(1000, 700);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-
-        // Panel para la tabla de datos
-        JPanel tablePanel = new JPanel(new BorderLayout());
         tableModel = new GeoRadarTableModel();
         table = new JTable(tableModel);
-        tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        // Panel para el gráfico
-        JPanel chartPanel = new JPanel(new BorderLayout());
-        dataset = new DefaultCategoryDataset();
-        JFreeChart chart = ChartFactory.createLineChart(
-                "GeoRadar Data Over Time",
-                "GeoRadar",
-                "Value",
-                dataset,
-                PlotOrientation.VERTICAL,
-                true, true, false);
-
-        // Añadir colores y formas al gráfico
-        LineAndShapeRenderer renderer = new LineAndShapeRenderer();
-        renderer.setSeriesShapesVisible(0, true);
-        renderer.setSeriesShapesVisible(1, true);
-        chart.getCategoryPlot().setRenderer(renderer);
-
-        ChartPanel cp = new ChartPanel(chart);
-        chartPanel.add(cp, BorderLayout.CENTER);
-
-        tabbedPane.add("Data Table", tablePanel);
-        tabbedPane.add("Chart", chartPanel);
-
-        add(tabbedPane, BorderLayout.CENTER);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
         timer = new Timer(5000, e -> fetchData());
         timer.start();
 
         fetchData();  // Initial data fetch
-
-        // Datos de muestra para inicializar el gráfico
-        initializeSampleData();
     }
 
     private void fetchData() {
@@ -81,7 +46,7 @@ public class GeoRadarGUI extends JFrame {
             URL url = new URL("http://localhost:8080/api/georadars");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString("alvaro:alvaro".getBytes()));
+            conn.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
 
             int responseCode = conn.getResponseCode();
             if (responseCode == 200) {
@@ -93,41 +58,21 @@ public class GeoRadarGUI extends JFrame {
                 }
                 in.close();
 
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JavaTimeModule());
-                List<GeoRadar> geoRadars = mapper.readValue(response.toString(), mapper.getTypeFactory().constructCollectionType(List.class, GeoRadar.class));
-                tableModel.setGeoRadars(geoRadars);
-                updateChart(geoRadars);
+                String contentType = conn.getContentType();
+                if (contentType != null && contentType.contains("application/json")) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.registerModule(new JavaTimeModule());
+                    List<GeoRadar> geoRadars = mapper.readValue(response.toString(), mapper.getTypeFactory().constructCollectionType(List.class, GeoRadar.class));
+                    tableModel.setGeoRadars(geoRadars);
+                } else {
+                    System.out.println("Unexpected content type: " + contentType);
+                }
             } else {
                 System.out.println("GET request failed: " + responseCode);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void updateChart(List<GeoRadar> geoRadars) {
-        dataset.clear();
-        for (GeoRadar radar : geoRadars) {
-            dataset.addValue(radar.getSensibilidad(), "Sensibilidad", radar.getNombre());
-            dataset.addValue(radar.getDistanciaMax(), "Distancia Max", radar.getNombre());
-        }
-    }
-
-    private void initializeSampleData() {
-        dataset.addValue(80, "Sensibilidad", "GeoRadar 1");
-        dataset.addValue(90, "Sensibilidad", "GeoRadar 2");
-        dataset.addValue(100, "Sensibilidad", "GeoRadar 3");
-        dataset.addValue(5000, "Distancia Max", "GeoRadar 1");
-        dataset.addValue(7000, "Distancia Max", "GeoRadar 2");
-        dataset.addValue(6000, "Distancia Max", "GeoRadar 3");
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GeoRadarGUI gui = new GeoRadarGUI();
-            gui.setVisible(true);
-        });
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -223,6 +168,9 @@ class GeoRadarTableModel extends DefaultTableModel {
         }
     }
 }
+
+
+
 
 
 
